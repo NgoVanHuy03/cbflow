@@ -1,0 +1,18 @@
+{
+  "_comment": "Auto-snapshot: chỉ dùng các worker Chrome đang mở và đã setup",
+  "image_worker": {
+    "_comment": "Chrome tạo ảnh reference — dùng cho TẤT CẢ kịch bản, tạo tuần tự từng kịch bản.",
+    "profile_dir": "chrome_profiles/dreamina_playwright_profile_image",
+    "proxy": null
+  },
+  "video_workers": [
+    {
+      "worker_id": "video_1",
+      "profile_dir": "chrome_profiles/dreamina_playwright_profile_video_1_fresh_20260420",
+      "proxy": "socks5://127.0.0.1:11001",
+      "proxy_real": "socks5://USER:PASS@IP:PORT",
+      "scenario_dir": "scenarios/kich_ban_A",
+      "_note": "IP: <IP> — qua bridge localhost:11001 | FRESH_PROFILE_20260420"
+    }
+  ]
+}

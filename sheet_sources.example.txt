@@ -1,0 +1,4 @@
+# Mỗi dòng: <sheet_url_or_id>|<project_mode>
+# project_mode: black-auto | hoa
+# Ví dụ:
+# https://docs.google.com/spreadsheets/d/<SHEET_ID>/edit?gid=0#gid=0|black-auto

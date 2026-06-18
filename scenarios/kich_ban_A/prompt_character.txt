@@ -1,0 +1,15 @@
+CHAR01_DAVIS_HAROLD_LOOK1: Ảnh toàn thân chụp studio, nền trơn đơn sắc, ánh sáng studio đều, camera chính diện, nhân vật là NGƯỜI THẬT photorealistic, biểu cảm trung tính, mắt nhìn thẳng vào khung hình, người Mỹ da đen, nam, 52, tóc đen cắt ngắn gọn gàng, dáng người trung bình, quần kaki màu be, áo blazer xanh navy không cà vạt, áo sơ mi trắng cài nút, thắt lưng da đen, giày oxford da đen
+
+CHAR02_DAVIS_HAROLD_LOOK2: Ảnh toàn thân chụp studio, nền trơn đơn sắc, ánh sáng studio đều, camera chính diện, nhân vật là NGƯỜI THẬT photorealistic, biểu cảm trung tính, mắt nhìn thẳng vào khung hình, người Mỹ da đen, nam, 30, tóc đen cắt ngắn gọn gàng, dáng người trung bình, áo sơ mi xanh nhạt cài nút, quần tây xám than, thắt lưng da đen, giày derby da đen
+
+CHAR03_DAVIS_HAROLD_LOOK3: Ảnh toàn thân chụp studio, nền trơn đơn sắc, ánh sáng studio đều, camera chính diện, nhân vật là NGƯỜI THẬT photorealistic, biểu cảm trung tính, mắt nhìn thẳng vào khung hình, người Mỹ da đen, nam, 53, tóc đen cắt ngắn gọn gàng, dáng người trung bình, bộ suit màu đen cắt may vừa vặn, áo sơ mi trắng, cà vạt đen, quần tây đen, giày oxford da đen
+
+CHAR04_ELLWORTH_CRAIG: Ảnh toàn thân chụp studio, nền trơn đơn sắc, ánh sáng studio đều, camera chính diện, nhân vật là NGƯỜI THẬT photorealistic, biểu cảm trung tính, mắt nhìn thẳng vào khung hình, người Mỹ da trắng, nam, 45, tóc nâu cắt ngắn chải gọn, dáng người trung bình, bộ suit xám đậm cắt may sang trọng, áo sơ mi trắng, cà vạt xanh navy, quần tây xám đậm, giày oxford da đen
+
+CHAR05_WATTS_DISE: Ảnh toàn thân chụp studio, nền trơn đơn sắc, ánh sáng studio đều, camera chính diện, nhân vật là NGƯỜI THẬT photorealistic, biểu cảm trung tính, mắt nhìn thẳng vào khung hình, người Mỹ da đen, nữ, 28, tóc đen duỗi thẳng dài ngang vai rẽ ngôi giữa, dáng người mảnh, áo sơ mi trắng cài nút, áo vest đen đồng phục, quần tây đen ống đứng, giày bít mũi da đen
+
+CHAR06_HARGROVE_GLENN: Ảnh toàn thân chụp studio, nền trơn đơn sắc, ánh sáng studio đều, camera chính diện, nhân vật là NGƯỜI THẬT photorealistic, biểu cảm trung tính, mắt nhìn thẳng vào khung hình, người Mỹ da trắng, nam, 63, tóc bạc cắt ngắn chải gọn, dáng người trung bình, bộ suit than chì, áo sơ mi trắng, cà vạt xám, quần tây than chì, giày oxford da đen
+
+CHAR07_PATTERSON_RAY: Ảnh toàn thân chụp studio, nền trơn đơn sắc, ánh sáng studio đều, camera chính diện, nhân vật là NGƯỜI THẬT photorealistic, biểu cảm trung tính, mắt nhìn thẳng vào khung hình, người Mỹ da trắng, nam, 55, tóc nâu cắt crew cut, dáng người to khỏe, áo sơ mi đồng phục an ninh màu xanh đậm tay dài, quần tây đồng phục màu xanh đậm, giày boots da đen
+
+CHAR08_COLE_TAMARA: Ảnh toàn thân chụp studio, nền trơn đơn sắc, ánh sáng studio đều, camera chính diện, nhân vật là NGƯỜI THẬT photorealistic, biểu cảm trung tính, mắt nhìn thẳng vào khung hình, người Mỹ da đen, nữ, 35, tóc đen uốn lọn nhẹ dài quá vai, dáng người trung bình, áo blazer đỏ đô, áo blouse đen, chân váy bút chì đen dài qua gối, giày cao gót mũi nhọn màu đen

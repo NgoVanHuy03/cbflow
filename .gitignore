@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.pyc
+
+# Local runtime outputs
+output_images/
+debug_sessions/
+progress_dreamina.json
+*.har
+profile_backups/
+
+# OS/editor
+.DS_Store
+chrome_profiles/
+chrome_profiles.zip
+
+# Sensitive credentials
+credentials.json
+token.json
+
+# Private operational data (giữ local, không public)
+sheet_sources.txt
+
+# Large/temp files
+*.zip
+logs/
+extracted/
+
+# Scenario data sinh ra khi chạy (riêng tư + lớn) — dùng *.example để tham khảo
+scenarios/*/output/
+scenarios/sheets_pipeline/

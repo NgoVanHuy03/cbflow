@@ -1,0 +1,15 @@
+# Chạy lại từ sheet 6 (retry row 34 bị fail) đến sheet 17
+# Chạy sau khi đã start proxy_bridge.py
+
+https://docs.google.com/spreadsheets/d/107-SCZWZeZ23KiL-GhgffnIk0scf2uPF3kUcWfWqm8M/edit?gid=0#gid=0|black-auto
+https://docs.google.com/spreadsheets/d/1IIeZbPLJ5fc4zIiH1J6GSzwKKCf6hIcJ9eOzBJn4RGM/edit?gid=1965310635#gid=1965310635|hoa
+https://docs.google.com/spreadsheets/d/1l33aMwc6ZsdIfappF7O0bpZkFgUtwwEM-q3iQHG5kzc/edit?gid=1874318872#gid=1874318872|hoa
+https://docs.google.com/spreadsheets/d/11B5EPuasvZaPHZVFx3bE6ZCRycGTrnvzpLdxE_xLgWY/edit?gid=1205111880#gid=1205111880|hoa
+https://docs.google.com/spreadsheets/d/1BQVlHjGDb7pluUJkgNMKRZ_kN1Z4cSwMXHTtZhkZTYM/edit?gid=1407726619#gid=1407726619|hoa
+https://docs.google.com/spreadsheets/d/1GGoX3yWsSYZEzbMMpNmP1Ui-VAd2akQOofoNNaQIFm8/edit?gid=0#gid=0|black-auto
+https://docs.google.com/spreadsheets/d/1vBNag2Ek-nCLJz_7gX1S1QtdO7d2xF1b9qkbzbaoAbw/edit?gid=0#gid=0|black-auto
+https://docs.google.com/spreadsheets/d/19gVl59U8bCM3rGIKamthxCX3xFWzx8K3n07qAyfV_Nk/edit?gid=0#gid=0|black-auto
+https://docs.google.com/spreadsheets/d/1Q_8tM87sdH-EUpwXBss82OgcX_k6WXfADLQadZR9Vv4/edit?gid=0#gid=0|black-auto
+https://docs.google.com/spreadsheets/d/10vj9LY3HDPNT1mkyJ0ihleB_D4uIL7jnPzNCIjxCWcw/edit?gid=0#gid=0|black-auto
+https://docs.google.com/spreadsheets/d/1AffyEBDMj2-DxWFhvAR9Vs_b8C98R0BOoknEsYinWSg/edit?gid=0#gid=0|black-auto
+https://docs.google.com/spreadsheets/d/163-DRsWWtB0ef2YGQRdP-V2kiaxXbPXb0Wa1sAvjJbo/edit?gid=0#gid=0|black-auto

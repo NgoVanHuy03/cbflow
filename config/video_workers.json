@@ -1,0 +1,92 @@
+{
+  "_comment": "Config hệ thống multi kịch bản song song. Mỗi video_worker = 1 Chrome riêng với 1 kịch bản riêng.",
+  "_proxy_note": "Chromium không hỗ trợ SOCKS5 auth trực tiếp. Chạy 'python3 proxy_bridge.py start' trước để gost làm bridge. Chrome dùng localhost:1100X (không cần auth), gost forward đến proxy thật.",
+  "image_worker": {
+    "_comment": "Chrome tạo ảnh reference — dùng cho TẤT CẢ kịch bản, tạo tuần tự từng kịch bản.",
+    "profile_dir": "chrome_profiles/dreamina_playwright_profile_image",
+    "proxy": null
+  },
+  "video_workers": [
+    {
+      "worker_id": "video_1",
+      "profile_dir": "chrome_profiles/dreamina_playwright_profile_video_1_fresh_20260420",
+      "proxy": "socks5://127.0.0.1:11001",
+      "proxy_real": "socks5://USER:PASS@IP:PORT",
+      "scenario_dir": "scenarios/kich_ban_A",
+      "_note": "IP: <IP> — qua bridge localhost:11001 | FRESH_PROFILE_20260420",
+      "profile_dir_old_backup": "chrome_profiles/dreamina_playwright_profile_video_1"
+    },
+    {
+      "worker_id": "video_2",
+      "profile_dir": "chrome_profiles/dreamina_playwright_profile_video_2",
+      "proxy": "socks5://127.0.0.1:11002",
+      "proxy_real": "socks5://USER:PASS@IP:PORT",
+      "scenario_dir": "scenarios/kich_ban_B",
+      "_note": "IP: <IP> — qua bridge localhost:11002"
+    },
+    {
+      "worker_id": "video_3",
+      "profile_dir": "chrome_profiles/dreamina_playwright_profile_video_3",
+      "proxy": "socks5://127.0.0.1:11003",
+      "proxy_real": "socks5://USER:PASS@IP:PORT",
+      "scenario_dir": "scenarios/kich_ban_C",
+      "_note": "IP: <IP> (cùng IP worker_1) — qua bridge localhost:11003"
+    },
+    {
+      "worker_id": "video_4",
+      "profile_dir": "chrome_profiles/dreamina_playwright_profile_video_4",
+      "proxy": "socks5://127.0.0.1:11004",
+      "proxy_real": "socks5://USER:PASS@IP:PORT",
+      "scenario_dir": "scenarios/kich_ban_D",
+      "_note": "IP: <IP> — qua bridge localhost:11004"
+    },
+    {
+      "worker_id": "video_5",
+      "profile_dir": "chrome_profiles/dreamina_playwright_profile_video_5",
+      "proxy": "socks5://127.0.0.1:11005",
+      "proxy_real": "socks5://USER:PASS@IP:PORT",
+      "scenario_dir": "scenarios/kich_ban_E",
+      "_note": "IP: <IP> — qua bridge localhost:11005"
+    },
+    {
+      "worker_id": "video_6",
+      "profile_dir": "chrome_profiles/dreamina_playwright_profile_video_6",
+      "proxy": "socks5://127.0.0.1:11006",
+      "proxy_real": "socks5://USER:PASS@IP:PORT",
+      "scenario_dir": "scenarios/kich_ban_F",
+      "_note": "IP: <IP> — qua bridge localhost:11006"
+    },
+    {
+      "worker_id": "video_7",
+      "profile_dir": "chrome_profiles/dreamina_playwright_profile_video_7",
+      "proxy": "socks5://127.0.0.1:11007",
+      "proxy_real": "socks5://USER:PASS@IP:PORT",
+      "scenario_dir": "scenarios/kich_ban_G",
+      "_note": "IP: <IP> — qua bridge localhost:11007"
+    },
+    {
+      "worker_id": "video_8",
+      "profile_dir": "chrome_profiles/dreamina_playwright_profile_video_8",
+      "proxy": "socks5://127.0.0.1:11008",
+      "proxy_real": "socks5://USER:PASS@IP:PORT",
+      "scenario_dir": "scenarios/kich_ban_H",
+      "_note": "IP: <IP> — qua bridge localhost:11008"
+    },
+    {
+      "worker_id": "video_9",
+      "profile_dir": "chrome_profiles/dreamina_playwright_profile_video_9",
+      "proxy": "socks5://127.0.0.1:11009",
+      "proxy_real": "socks5://USER:PASS@IP:PORT",
+      "scenario_dir": "scenarios/kich_ban_I",
+      "_note": "SOCKS5 proxy qua bridge localhost:11009"
+    },
+    {
+      "worker_id": "video_10",
+      "profile_dir": "chrome_profiles/dreamina_playwright_profile_video_10",
+      "proxy": "socks5://127.0.0.1:11010",
+      "proxy_real": "socks5://USER:PASS@IP:PORT",
+      "scenario_dir": "scenarios/kich_ban_J",
+      "_note": "SOCKS5 proxy qua bridge localhost:11010"
+    }
+  ]
+}

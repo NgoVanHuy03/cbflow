@@ -1,0 +1,75 @@
+# ════════════════════════════════════════════════════
+#   CẤU HÌNH PANEL SETTING GOOGLE FLOW
+#   Sửa file này để thay đổi setting UI tự động.
+#   Không cần đụng vào code Python.
+# ════════════════════════════════════════════════════
+#
+# Cú pháp: key = value   (# là comment, bỏ qua)
+# Sau khi sửa, lưu file và chạy lại script là có hiệu lực.
+#
+# ────────────────────────────────────────────────────
+
+# Có bật auto setup panel khi khởi động không?
+# true  → script tự click chọn setting bên dưới
+# false → bạn tự setup tay trên trình duyệt
+auto_apply = true
+
+# Tab trên cùng
+# Giá trị hợp lệ: video | image
+top_mode = image
+
+# Tab phụ (dòng thứ 2 trong panel, nếu có)
+# Giá trị hợp lệ: thành phần | khung hình
+# Để trống nếu không muốn click tab phụ
+secondary_mode = 
+
+# Tỉ lệ khung hình (phụ thuộc top_mode)
+# - Nếu top_mode = image:
+#   16:9 | 4:3 | 1:1 | 3:4 | 9:16
+# - Nếu top_mode = video:
+#   9:16 | 16:9
+# Lưu ý:
+# - Nếu nhập ratio không thuộc mode hiện tại, script sẽ tự fallback ratio mặc định của mode đó.
+aspect_ratio = 16:9
+
+# Số lượng output mỗi lần generate
+# Giá trị hợp lệ: x1 | x2 | x3 | x4
+multiplier = x1
+
+# Model trong dropdown (phụ thuộc top_mode)
+# - Nếu top_mode = image:
+#   Nano Banana Pro | Nano Banana 2 | Imagen 4
+# - Nếu top_mode = video:
+#   Veo 3.1 - Fast | Veo 3.1 - Quality | Veo 3.1 - Lite
+#   Veo 3.1 - Fast [Lower Priority] | Veo 3.1 - Lite [Lower Priority]
+# Lưu ý:
+# - Nếu nhập model không thuộc mode hiện tại, script sẽ tự fallback model mặc định của mode đó.
+# - UI đôi khi đổi tên Nano Banana 2 <-> Nano Banana Pro, service có alias để tự nhận diện.
+model_name = Nano Banana 2
+
+# Có cho phép fallback alias model khi không chọn được exact model không?
+# false -> bắt buộc đúng model_name đã nhập (khuyên dùng để tránh chọn sai model)
+# true  -> cho phép fallback alias (ví dụ Nano Banana 2 -> Nano Banana Pro)
+allow_model_alias_fallback = false
+
+# ────────────────────────────────────────────────────
+# CẤU HÌNH PIPELINE: GỬI NHIỀU PROMPT CÙNG LÚC
+# ────────────────────────────────────────────────────
+
+# Chế độ gửi prompt trong 1 Chrome:
+# serial   → gửi từng cái, chờ ảnh xong rồi mới gửi cái tiếp (an toàn, chậm)
+# pipeline → gửi nhiều prompt cùng lúc mà không chờ (nhanh hơn)
+scene_execution_mode = pipeline
+
+# Số prompt tối đa gửi đồng thời trong 1 Chrome (chỉ có hiệu lực khi mode = pipeline)
+# Khuyến nghị:
+#   2 → an toàn, ít bị Unusual Activity, nhanh gần 2x
+#   3 → nhanh hơn, rủi ro cảnh báo cao hơn
+#   4+ → không khuyến nghị
+pipeline_max_in_flight = 6
+
+# Khoảng nghỉ ngẫu nhiên (giây) giữa 2 lần gửi prompt liên tiếp
+# Dạng: min - max  (ví dụ: 1.5 - 3.5 nghĩa là nghỉ từ 1.5 đến 3.5 giây ngẫu nhiên)
+# Giá trị nhỏ → gửi nhanh hơn nhưng dễ bị cảnh báo
+# Giá trị lớn → tự nhiên hơn, an toàn hơn
+pipeline_send_gap_sec = 1 - 2.5
