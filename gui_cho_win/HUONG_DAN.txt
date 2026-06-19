@@ -1,0 +1,30 @@
+==========================================================
+  HƯỚNG DẪN CHẨN ĐOÁN CHICHBONG TRÊN MÁY WINDOWS
+==========================================================
+
+MỤC ĐÍCH:
+  Xem máy Windows lưu LICENSE KEY + HARDWARE ID của ChichBong
+  (Imagen4) ở đâu trong Registry. Chỉ ĐỌC, KHÔNG sửa gì.
+
+----------------------------------------------------------
+TRƯỚC KHI CHẠY:
+  - Đã cài và ĐÃ KÍCH HOẠT app ChichBong trên máy này.
+----------------------------------------------------------
+
+CÁCH 1 — KHÔNG cần Python (khuyên dùng):
+  1. Double-click file:  kiem_tra_win_chichbong.bat
+  2. Notepad sẽ tự mở, đồng thời tạo file:  ket_qua_chichbong.txt
+  3. Gửi lại file  ket_qua_chichbong.txt
+
+CÁCH 2 — Nếu máy đã có Python:
+  1. Mở Command Prompt tại thư mục này
+  2. Chạy:   python kiem_tra_win_chichbong.py
+  3. Copy toàn bộ kết quả in ra, gửi lại
+
+----------------------------------------------------------
+GỬI LẠI:
+  - File  ket_qua_chichbong.txt  (Cách 1)
+  - Hoặc toàn bộ chữ in ra màn hình (Cách 2)
+----------------------------------------------------------
+
+An toàn: script chỉ đọc thông tin, không thay đổi máy.

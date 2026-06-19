@@ -279,6 +279,16 @@ def _resolve_imagen4_license_key(explicit_key: str) -> str:
                 return v
         except Exception:
             continue
+
+    # Cuối cùng: thử Registry Windows / file client (cross-platform).
+    try:
+        from services.chichbong_imagen_service import resolve_license_from_client
+        v = resolve_license_from_client()
+        if v:
+            _log("[imagen4] Auto nạp license key từ Registry/client ChichBong.")
+            return v
+    except Exception:
+        pass
     return ""
 
 

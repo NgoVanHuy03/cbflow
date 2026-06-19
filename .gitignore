@@ -22,6 +22,9 @@ token.json
 
 # Private operational data (giữ local, không public)
 sheet_sources.txt
+# Kết quả chẩn đoán Windows (chứa license + email người dùng) — không commit
+ket_qua_chichbong.txt
+gui_cho_win/ket_qua_chichbong.txt
 
 # Large/temp files
 *.zip

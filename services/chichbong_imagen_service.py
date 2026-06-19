@@ -14,6 +14,7 @@ import json
 import logging
 import os
 import re
+import sys
 import time
 import uuid
 from pathlib import Path
@@ -128,9 +129,13 @@ def _candidate_external_client_files() -> list[Path]:
 
 def resolve_license_from_client() -> str:
     """
-    Tự dò LICENSE_KEY từ file client ChichBong trên máy (cross-platform).
+    Tự dò LICENSE_KEY: Registry Windows (nếu có) > file client ChichBong trên máy.
     Trả về chuỗi rỗng nếu không tìm thấy.
     """
+    reg_key = _read_windows_registry().get("LICENSE_KEY", "")
+    if reg_key:
+        return reg_key
+
     for path in _candidate_external_client_files():
         try:
             if not path.exists() or not path.is_file():
@@ -173,11 +178,64 @@ def _load_external_client_constants() -> dict[str, str]:
     return _EXT_CLIENT_CACHE
 
 
+_WIN_REG_CACHE: dict[str, str] | None = None
+
+
+def _read_windows_registry() -> dict[str, str]:
+    """
+    Trên Windows: đọc license + machine identity mà app ChichBong đã cache
+    sẵn trong Registry. Trả về dict rỗng nếu không phải Windows / không có.
+
+    Vị trí (theo QSettings của app):
+      - license key:  HKCU\\Software\\Imagen4\\Imagen4 Client\\license  → value 'key'
+      - fingerprint:  HKCU\\Software\\ElevenLabs\\ElevenLabs TTS Client\\system
+                      → hardware_id, cached_cpu_id, cached_mainboard_uuid
+    """
+    global _WIN_REG_CACHE
+    if _WIN_REG_CACHE is not None:
+        return _WIN_REG_CACHE
+
+    result: dict[str, str] = {}
+    if not sys.platform.startswith("win"):
+        _WIN_REG_CACHE = result
+        return result
+    try:
+        import winreg  # type: ignore
+    except Exception:
+        _WIN_REG_CACHE = result
+        return result
+
+    def _read(root, path: str, value: str) -> str:
+        try:
+            with winreg.OpenKey(root, path) as k:
+                v, _ = winreg.QueryValueEx(k, value)
+                return str(v or "").strip()
+        except Exception:
+            return ""
+
+    hkcu = winreg.HKEY_CURRENT_USER
+    sys_path = r"Software\ElevenLabs\ElevenLabs TTS Client\system"
+    result["HARDWARE_ID"] = _read(hkcu, sys_path, "hardware_id")
+    result["CPU_ID"] = _read(hkcu, sys_path, "cached_cpu_id")
+    result["MAINBOARD_UUID"] = _read(hkcu, sys_path, "cached_mainboard_uuid")
+    result["LICENSE_KEY"] = _read(hkcu, r"Software\Imagen4\Imagen4 Client\license", "key")
+
+    if any(result.values()):
+        logger.info("[cb-imagen] Auto nạp license/identity từ Registry Windows.")
+    _WIN_REG_CACHE = result
+    return result
+
+
 def _resolve_machine_identity() -> tuple[str, str, str]:
+    reg = _read_windows_registry()
     ext = _load_external_client_constants()
-    hw = str(os.environ.get("CHICHBONG_HARDWARE_ID", "") or "").strip() or ext.get("HARDWARE_ID", "") or HARDWARE_ID
-    cpu = str(os.environ.get("CHICHBONG_CPU_ID", "") or "").strip() or ext.get("CPU_ID", "") or CPU_ID
-    mb = str(os.environ.get("CHICHBONG_MAINBOARD_UUID", "") or "").strip() or ext.get("MAINBOARD_UUID", "") or MAINBOARD_UUID
+    # Ưu tiên: ENV > Registry Windows > file client > hằng số hardcode (đã trống).
+    hw = (str(os.environ.get("CHICHBONG_HARDWARE_ID", "") or "").strip()
+          or reg.get("HARDWARE_ID", "") or ext.get("HARDWARE_ID", "") or HARDWARE_ID)
+    cpu = (str(os.environ.get("CHICHBONG_CPU_ID", "") or "").strip()
+           or reg.get("CPU_ID", "") or ext.get("CPU_ID", "") or CPU_ID)
+    mb = (str(os.environ.get("CHICHBONG_MAINBOARD_UUID", "") or "").strip()
+          or reg.get("MAINBOARD_UUID", "") or ext.get("MAINBOARD_UUID", "") or MAINBOARD_UUID)
     return str(hw), str(cpu), str(mb)
 
 
