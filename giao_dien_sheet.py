@@ -5,11 +5,12 @@ Giao diện chạy pipeline: Google Sheet → tạo ảnh (imagen4) → upload D
 
 Trên giao diện:
   1. Chọn file credentials (.json) — chìa khóa Google API để đọc/ghi sheet.
-  2. Đăng nhập Google (mở trình duyệt xác thực, tạo token.json).
+  2. Đăng nhập Google (mở trình duyệt; lưu token.json → lần sau KHỎI đăng nhập lại).
   3. Chọn file danh sách sheet (.txt) — mỗi dòng 1 link sheet (có thể kèm |hoa).
-  4. Chọn folder Drive lưu ảnh (mặc định: root = My Drive).
+  4. Chọn tỉ lệ + chất lượng ảnh, folder Drive lưu ảnh.
   5. Bấm BẮT ĐẦU CHẠY.
 
+Cấu hình (file/tỉ lệ/Drive) tự LƯU lại → lần sau mở lên đã điền sẵn.
 License imagen4 tự đọc từ Registry máy (cần app ChichBong đã kích hoạt).
 
 Chạy:  python giao_dien_sheet.py
@@ -17,6 +18,7 @@ Chạy:  python giao_dien_sheet.py
 
 from __future__ import annotations
 
+import json
 import os
 import queue
 import sys
@@ -30,10 +32,15 @@ import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 
 APP_DIR = Path(__file__).resolve().parent
+TOKEN_PATH = APP_DIR / "token.json"
+CONFIG_PATH = APP_DIR / "cau_hinh_sheet.json"   # nơi lưu cấu hình lần trước
+
+RATIO_MAP = {"Vuông (1:1)": "square", "Ngang (16:9)": "landscape", "Dọc (9:16)": "portrait"}
+QUALITY_MAP = {"2K (nét hơn)": "2k", "1K (nhanh hơn)": "1k"}
 
 
-# ── Redirect print() của pipeline vào hàng đợi GUI ─────────────────────────────
 class _QueueWriter:
+    """Chuyển print() của pipeline vào hàng đợi GUI."""
     def __init__(self, q: "queue.Queue"):
         self.q = q
 
@@ -62,6 +69,13 @@ def _parse_sources(path: str) -> list[tuple[str, str]]:
     return items
 
 
+def _key_for_value(d: dict, value: str, default_idx: int = 0) -> str:
+    for k, v in d.items():
+        if v == value:
+            return k
+    return list(d.keys())[default_idx]
+
+
 class App:
     def __init__(self, root: tk.Tk):
         self.root = root
@@ -69,21 +83,21 @@ class App:
         self.running = False
         self.stop_flag = False
         self.logged_in = False
-        self.token_path = str(APP_DIR / "token.json")
 
-        self.cred_path = tk.StringVar()
-        self.sources_path = tk.StringVar()
-        self.drive_folder = tk.StringVar(value="root")
+        cfg = self._load_config()
+        self.cred_path = tk.StringVar(value=cfg.get("credentials", ""))
+        self.sources_path = tk.StringVar(value=cfg.get("sources", ""))
+        self.drive_folder = tk.StringVar(value=cfg.get("drive_folder", "root"))
+        self.var_ratio = tk.StringVar(value=_key_for_value(RATIO_MAP, cfg.get("ratio", "square")))
+        self.var_quality = tk.StringVar(value=_key_for_value(QUALITY_MAP, cfg.get("quality", "2k")))
 
         root.title("Chạy Sheet → Ảnh → Drive (ChichBong Imagen4)")
-        root.geometry("680x640")
-        root.minsize(600, 580)
+        root.geometry("700x700")
+        root.minsize(620, 640)
         pad = {"padx": 12, "pady": 4}
 
         ttk.Label(root, text="Chạy nhiều Sheet tự động",
                   font=("Segoe UI", 15, "bold")).pack(anchor="w", **pad)
-
-        # License imagen4
         self.lbl_license = ttk.Label(root, text="Đang kiểm tra license…", foreground="#555")
         self.lbl_license.pack(anchor="w", padx=12)
 
@@ -93,7 +107,7 @@ class App:
         ttk.Entry(f1, textvariable=self.cred_path).pack(side="left", fill="x", expand=True, padx=6, pady=6)
         ttk.Button(f1, text="Chọn file .json", command=self._pick_cred).pack(side="left", padx=6)
 
-        # 2) Đăng nhập Google
+        # 2) Đăng nhập
         f2 = ttk.Frame(root)
         f2.pack(fill="x", **pad)
         self.btn_login = ttk.Button(f2, text="2) Đăng nhập Google", command=self._login)
@@ -101,18 +115,29 @@ class App:
         self.lbl_login = ttk.Label(f2, text="● Chưa đăng nhập", foreground="#b00020")
         self.lbl_login.pack(side="left", padx=10)
 
-        # 3) Sources .txt
+        # 3) Sources
         f3 = ttk.LabelFrame(root, text="3) File danh sách sheet (.txt)")
         f3.pack(fill="x", **pad)
         ttk.Entry(f3, textvariable=self.sources_path).pack(side="left", fill="x", expand=True, padx=6, pady=6)
         ttk.Button(f3, text="Chọn file .txt", command=self._pick_sources).pack(side="left", padx=6)
 
-        # 4) Drive folder
-        f4 = ttk.LabelFrame(root, text="4) Folder Drive lưu ảnh (link hoặc 'root' = My Drive)")
+        # 4) Tuỳ chọn ảnh + Drive
+        f4 = ttk.LabelFrame(root, text="4) Tuỳ chọn ảnh & nơi lưu Drive")
         f4.pack(fill="x", **pad)
-        ttk.Entry(f4, textvariable=self.drive_folder).pack(fill="x", padx=6, pady=6)
+        row = ttk.Frame(f4)
+        row.pack(fill="x", padx=6, pady=4)
+        ttk.Label(row, text="Tỉ lệ:").pack(side="left")
+        ttk.Combobox(row, textvariable=self.var_ratio, values=list(RATIO_MAP.keys()),
+                     state="readonly", width=12).pack(side="left", padx=(4, 14))
+        ttk.Label(row, text="Chất lượng:").pack(side="left")
+        ttk.Combobox(row, textvariable=self.var_quality, values=list(QUALITY_MAP.keys()),
+                     state="readonly", width=12).pack(side="left", padx=4)
+        row2 = ttk.Frame(f4)
+        row2.pack(fill="x", padx=6, pady=(0, 6))
+        ttk.Label(row2, text="Folder Drive (link hoặc 'root' = My Drive):").pack(side="left")
+        ttk.Entry(row2, textvariable=self.drive_folder).pack(side="left", fill="x", expand=True, padx=4)
 
-        # 5) Nút chạy
+        # 5) Chạy
         f5 = ttk.Frame(root)
         f5.pack(fill="x", **pad)
         self.btn_run = ttk.Button(f5, text="▶ BẮT ĐẦU CHẠY", command=self._run)
@@ -123,11 +148,14 @@ class App:
         self.lbl_status = ttk.Label(root, text="Sẵn sàng.", foreground="#1a7f37")
         self.lbl_status.pack(anchor="w", padx=12)
 
-        # Log
+        # Nơi lưu
+        self.lbl_saveinfo = ttk.Label(root, text="", foreground="#666", font=("Segoe UI", 8))
+        self.lbl_saveinfo.pack(anchor="w", padx=12)
+
         ttk.Label(root, text="Nhật ký:").pack(anchor="w", padx=12, pady=(6, 0))
         logf = ttk.Frame(root)
         logf.pack(fill="both", expand=True, padx=12, pady=(0, 10))
-        self.log = tk.Text(logf, height=12, state="disabled", wrap="word",
+        self.log = tk.Text(logf, height=11, state="disabled", wrap="word",
                            bg="#111", fg="#ddd", font=("Consolas", 9))
         sb = ttk.Scrollbar(logf, command=self.log.yview)
         self.log.configure(yscrollcommand=sb.set)
@@ -135,8 +163,35 @@ class App:
         sb.pack(side="right", fill="y")
 
         self._init_license()
-        self._autofill_defaults()
+        self._refresh_login_state()
+        self._refresh_saveinfo()
+        self.root.protocol("WM_DELETE_WINDOW", self._on_close)
         self.root.after(120, self._poll)
+
+    # ── Cấu hình (lưu/đọc) ───────────────────────────────────────────────────────
+    def _load_config(self) -> dict:
+        try:
+            if CONFIG_PATH.exists():
+                return json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+        return {}
+
+    def _save_config(self):
+        try:
+            CONFIG_PATH.write_text(json.dumps({
+                "credentials": self.cred_path.get().strip(),
+                "sources": self.sources_path.get().strip(),
+                "drive_folder": self.drive_folder.get().strip() or "root",
+                "ratio": RATIO_MAP.get(self.var_ratio.get(), "square"),
+                "quality": QUALITY_MAP.get(self.var_quality.get(), "2k"),
+            }, ensure_ascii=False, indent=2), encoding="utf-8")
+        except Exception:
+            pass
+
+    def _on_close(self):
+        self._save_config()
+        self.root.destroy()
 
     # ── Khởi tạo ────────────────────────────────────────────────────────────────
     def _init_license(self):
@@ -154,15 +209,19 @@ class App:
                 text="⚠ Không thấy license imagen4. Cài & kích hoạt app ChichBong trên máy này.",
                 foreground="#b00020")
 
-    def _autofill_defaults(self):
-        # Gợi ý file mặc định nếu có sẵn cạnh app.
-        for name, var in (("credentials.json", self.cred_path), ("sheet_sources.txt", self.sources_path)):
-            p = APP_DIR / name
-            if p.exists() and not var.get():
-                var.set(str(p))
-        if (APP_DIR / "token.json").exists():
+    def _refresh_login_state(self):
+        if TOKEN_PATH.exists():
             self.logged_in = True
-            self.lbl_login.config(text="● Đã có token", foreground="#1a7f37")
+            self.lbl_login.config(text="● Đã đăng nhập (dùng token đã lưu)", foreground="#1a7f37")
+        else:
+            self.logged_in = False
+            self.lbl_login.config(text="● Chưa đăng nhập", foreground="#b00020")
+
+    def _refresh_saveinfo(self):
+        token_txt = "đã lưu — lần sau khỏi đăng nhập lại" if TOKEN_PATH.exists() else "chưa có"
+        self.lbl_saveinfo.config(
+            text=(f"Đăng nhập lưu tại: {TOKEN_PATH.name} ({token_txt})   |   "
+                  f"Cấu hình lưu tại: {CONFIG_PATH.name}   |   Thư mục: {APP_DIR}"))
 
     # ── Chọn file ────────────────────────────────────────────────────────────────
     def _pick_cred(self):
@@ -170,12 +229,14 @@ class App:
                                        filetypes=[("JSON", "*.json"), ("Tất cả", "*.*")])
         if f:
             self.cred_path.set(f)
+            self._save_config()
 
     def _pick_sources(self):
         f = filedialog.askopenfilename(title="Chọn file danh sách sheet .txt",
                                        filetypes=[("Text", "*.txt"), ("Tất cả", "*.*")])
         if f:
             self.sources_path.set(f)
+            self._save_config()
 
     # ── Đăng nhập Google ─────────────────────────────────────────────────────────
     def _login(self):
@@ -192,7 +253,7 @@ class App:
         sys.stdout = _QueueWriter(self.q)
         try:
             from services.sheet_drive_flow_service import _build_google_services
-            _build_google_services(Path(cred), Path(self.token_path))
+            _build_google_services(Path(cred), TOKEN_PATH)
             self.q.put(("login_ok", None))
         except Exception as e:
             self.q.put(("login_err", str(e)))
@@ -223,16 +284,21 @@ class App:
             messagebox.showwarning("Trống", "File .txt không có link sheet hợp lệ.")
             return
 
+        self._save_config()  # lưu lựa chọn cho lần sau
         drive = self.drive_folder.get().strip() or "root"
+        ratio = RATIO_MAP.get(self.var_ratio.get(), "square")
+        quality = QUALITY_MAP.get(self.var_quality.get(), "2k")
+
         self.running = True
         self.stop_flag = False
         self.btn_run.config(state="disabled", text="Đang chạy…")
         self.btn_stop.config(state="normal")
         self.lbl_status.config(text=f"Đang chạy {len(items)} sheet…", foreground="#0b66c3")
-        self._log(f"=== Bắt đầu: {len(items)} sheet | Drive={drive} ===")
-        threading.Thread(target=self._run_worker, args=(items, cred, drive), daemon=True).start()
+        self._log(f"=== Bắt đầu: {len(items)} sheet | tỉ lệ={ratio} | {quality.upper()} | Drive={drive} ===")
+        threading.Thread(target=self._run_worker,
+                         args=(items, cred, drive, ratio, quality), daemon=True).start()
 
-    def _run_worker(self, items, cred, drive):
+    def _run_worker(self, items, cred, drive, ratio, quality):
         old = sys.stdout
         sys.stdout = _QueueWriter(self.q)
         import logging
@@ -255,9 +321,11 @@ class App:
                     cfg = SheetFlowConfig(
                         sheet=sheet,
                         credentials=cred,
-                        token_file=self.token_path,
+                        token_file=str(TOKEN_PATH),
                         drive_output_parent_id=parent,
                         generator="imagen4",
+                        imagen4_aspect_ratio=ratio,
+                        imagen4_quality=quality,
                     )
                     res = run_sheet_drive_flow_pipeline(cfg)
                     ok, fail = int(res.get("ok", 0)), int(res.get("fail", 0))
@@ -279,7 +347,7 @@ class App:
         self.lbl_status.config(text="Đang dừng sau sheet hiện tại…", foreground="#b06000")
         self.btn_stop.config(state="disabled")
 
-    # ── Poll hàng đợi ────────────────────────────────────────────────────────────
+    # ── Poll ─────────────────────────────────────────────────────────────────────
     def _poll(self):
         try:
             while True:
@@ -289,10 +357,10 @@ class App:
                 elif kind == "status":
                     self.lbl_status.config(text=str(data), foreground="#0b66c3")
                 elif kind == "login_ok":
-                    self.logged_in = True
                     self.btn_login.config(state="normal", text="2) Đăng nhập Google")
-                    self.lbl_login.config(text="● Đã đăng nhập", foreground="#1a7f37")
-                    self._log("✓ Đăng nhập Google thành công.")
+                    self._refresh_login_state()
+                    self._refresh_saveinfo()
+                    self._log("✓ Đăng nhập Google thành công — token đã lưu.")
                 elif kind == "login_err":
                     self.btn_login.config(state="normal", text="2) Đăng nhập Google")
                     self.lbl_login.config(text="● Lỗi đăng nhập", foreground="#b00020")

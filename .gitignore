@@ -34,3 +34,6 @@ extracted/
 # Scenario data sinh ra khi chạy (riêng tư + lớn) — dùng *.example để tham khảo
 scenarios/*/output/
 scenarios/sheets_pipeline/
+cau_hinh_sheet.json
+gui_cho_win/cau_hinh_sheet.json
+gui_cho_win/token.json
