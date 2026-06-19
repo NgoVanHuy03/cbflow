@@ -27,8 +27,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
 
-QUALITY_2K = "2k"
 RATIO_MAP = {"Vuông (1:1)": "square", "Ngang (16:9)": "landscape", "Dọc (9:16)": "portrait"}
+QUALITY_MAP = {"2K (nét hơn)": "2k", "1K (nhanh hơn)": "1k"}
 
 
 # ── Đọc thông tin tài khoản (quota) từ Registry Windows ────────────────────────
@@ -101,9 +101,14 @@ class App:
         opt = ttk.Frame(root)
         opt.pack(fill="x", **pad)
         ttk.Label(opt, text="Tỉ lệ:").pack(side="left")
-        self.cmb_ratio = ttk.Combobox(opt, values=list(RATIO_MAP.keys()), state="readonly", width=14)
+        self.cmb_ratio = ttk.Combobox(opt, values=list(RATIO_MAP.keys()), state="readonly", width=12)
         self.cmb_ratio.current(0)
-        self.cmb_ratio.pack(side="left", padx=(4, 16))
+        self.cmb_ratio.pack(side="left", padx=(4, 12))
+
+        ttk.Label(opt, text="Chất lượng:").pack(side="left")
+        self.cmb_quality = ttk.Combobox(opt, values=list(QUALITY_MAP.keys()), state="readonly", width=12)
+        self.cmb_quality.current(0)  # mặc định 2K
+        self.cmb_quality.pack(side="left", padx=(4, 16))
 
         ttk.Label(opt, text="Lưu vào:").pack(side="left")
         self.var_out = tk.StringVar(value=str(Path.cwd() / "anh_2k"))
@@ -206,18 +211,19 @@ class App:
 
         out_dir = Path(self.var_out.get())
         ratio = RATIO_MAP.get(self.cmb_ratio.get(), "square")
+        quality = QUALITY_MAP.get(self.cmb_quality.get(), "2k")
 
         self.running = True
         self.btn.config(state="disabled", text="Đang tạo…")
         self.pbar.config(value=0)
-        self.lbl_status.config(text=f"Đang tạo {len(prompts)} ảnh 2K…", foreground="#0b66c3")
-        self._log(f"--- Bắt đầu: {len(prompts)} ảnh, tỉ lệ={ratio}, 2K → {out_dir} ---")
+        self.lbl_status.config(text=f"Đang tạo {len(prompts)} ảnh {quality.upper()}…", foreground="#0b66c3")
+        self._log(f"--- Bắt đầu: {len(prompts)} ảnh, tỉ lệ={ratio}, {quality.upper()} → {out_dir} ---")
 
-        t = threading.Thread(target=self._worker, args=(prompts, out_dir, ratio), daemon=True)
+        t = threading.Thread(target=self._worker, args=(prompts, out_dir, ratio, quality), daemon=True)
         t.start()
 
     # ── Worker (thread riêng, chạy asyncio) ─────────────────────────────────────
-    def _worker(self, prompts, out_dir: Path, ratio: str):
+    def _worker(self, prompts, out_dir: Path, ratio: str, quality: str):
         handler = _QueueLogHandler(self.q)
         eng_logger = logging.getLogger("services.chichbong_imagen_service")
         eng_logger.addHandler(handler)
@@ -229,7 +235,7 @@ class App:
                 output_dir=out_dir,
                 license_key=self.license_key,
                 aspect_ratio=ratio,
-                upscale_mode=QUALITY_2K,
+                upscale_mode=quality,
                 max_in_flight=min(6, len(prompts)),
             ))
             self.q.put(("done", saved))
