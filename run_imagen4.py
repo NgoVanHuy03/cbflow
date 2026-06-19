@@ -23,7 +23,6 @@ from __future__ import annotations
 import argparse
 import asyncio
 import os
-import re
 import sys
 from pathlib import Path
 
@@ -37,21 +36,10 @@ def _resolve_license_key(explicit: str) -> str:
         if v:
             print(f"[run_imagen4] Dùng license từ ENV {env_name}")
             return v
-    candidates = [
-        Path("/Users/may6/Downloads/chichbong/chichbongtaoanh/chichbong_api_client.py"),
-    ]
-    for p in candidates:
-        try:
-            if not p.exists():
-                continue
-            text = p.read_text(encoding="utf-8", errors="ignore")
-            m = re.search(r'^\s*LICENSE_KEY\s*=\s*["\']([^"\']+)["\']', text, flags=re.MULTILINE)
-            if m:
-                print(f"[run_imagen4] Auto nạp license từ: {p}")
-                return m.group(1).strip()
-        except Exception:
-            continue
-    return ""
+    # Tự dò từ file client ChichBong trên máy (macOS / Windows / Linux).
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    from services.chichbong_imagen_service import resolve_license_from_client
+    return resolve_license_from_client()
 
 
 def _parse_args() -> argparse.Namespace:

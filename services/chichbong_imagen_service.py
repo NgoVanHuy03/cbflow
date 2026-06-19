@@ -77,18 +77,43 @@ def _extract_literal(text: str, name: str) -> str:
 
 
 def _candidate_external_client_files() -> list[Path]:
+    """
+    Danh sách vị trí có thể chứa file client ChichBong (chichbong_api_client.py)
+    — file này giữ LICENSE_KEY + machine identity. Hoạt động cross-platform
+    (macOS / Linux / Windows). Thứ tự ưu tiên:
+      1) ENV CHICHBONG_CLIENT_FILE (trỏ thẳng file — ưu tiên cao nhất)
+      2) Đường dẫn tương đối theo cấu trúc thư mục dự án
+      3) Các thư mục người dùng phổ biến (Downloads/Desktop/Documents/home)
+         + thư mục hệ thống Windows (USERPROFILE/APPDATA/PROGRAMFILES...)
+    """
     out: list[Path] = []
+    rel = ("chichbong", "chichbongtaoanh", "chichbong_api_client.py")
+
+    # 1) ENV trỏ thẳng file
     env_path = str(os.environ.get("CHICHBONG_CLIENT_FILE", "") or "").strip()
     if env_path:
         out.append(Path(env_path))
 
+    # 2) Tương đối theo dự án: <.../flow_video/short-image-flow> → lên 2 cấp
     project_root = Path(__file__).resolve().parent.parent
-    out.extend(
-        [
-            Path("/Users/may6/Downloads/chichbong/chichbongtaoanh/chichbong_api_client.py"),
-            project_root.parent.parent / "chichbong" / "chichbongtaoanh" / "chichbong_api_client.py",
-        ]
-    )
+    out.append(project_root.parent.parent.joinpath(*rel))
+
+    # 3) Các gốc thư mục phổ biến (cross-platform)
+    roots: list[Path] = []
+    try:
+        home = Path.home()
+        roots += [home / "Downloads", home / "Desktop", home / "Documents", home]
+    except Exception:
+        pass
+    for env_name in ("USERPROFILE", "APPDATA", "LOCALAPPDATA", "PROGRAMFILES", "PROGRAMFILES(X86)"):
+        v = str(os.environ.get(env_name, "") or "").strip()
+        if v:
+            roots.append(Path(v))
+    for root in roots:
+        out.append(root.joinpath(*rel))
+
+    # 4) Đường dẫn macOS cũ (tương thích ngược)
+    out.append(Path("/Users/may6/Downloads").joinpath(*rel))
 
     uniq: list[Path] = []
     seen: set[str] = set()
@@ -99,6 +124,24 @@ def _candidate_external_client_files() -> list[Path]:
         seen.add(k)
         uniq.append(p)
     return uniq
+
+
+def resolve_license_from_client() -> str:
+    """
+    Tự dò LICENSE_KEY từ file client ChichBong trên máy (cross-platform).
+    Trả về chuỗi rỗng nếu không tìm thấy.
+    """
+    for path in _candidate_external_client_files():
+        try:
+            if not path.exists() or not path.is_file():
+                continue
+            key = _extract_literal(path.read_text(encoding="utf-8", errors="ignore"), "LICENSE_KEY")
+            if key:
+                logger.info(f"[cb-imagen] Auto nạp license từ: {path}")
+                return key
+        except Exception:
+            continue
+    return ""
 
 
 _EXT_CLIENT_CACHE: dict[str, str] | None = None

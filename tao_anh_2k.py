@@ -26,21 +26,23 @@ from __future__ import annotations
 import argparse
 import asyncio
 import os
-import re
 import sys
 from pathlib import Path
 
 # Cho phép import services khi chạy từ bất kỳ thư mục nào.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from services.chichbong_imagen_service import generate_images_with_chichbong
+from services.chichbong_imagen_service import (
+    generate_images_with_chichbong,
+    resolve_license_from_client,
+)
 
 # Chất lượng khóa cứng 2K — đây là mục đích của script này.
 QUALITY_2K = "2k"
 
 
 def _resolve_license_key(explicit: str) -> str:
-    """Dò license: tham số > ENV > file client ChichBong trên máy."""
+    """Dò license: tham số > ENV > file client ChichBong trên máy (cross-platform)."""
     key = str(explicit or "").strip()
     if key:
         return key
@@ -49,26 +51,8 @@ def _resolve_license_key(explicit: str) -> str:
         if v:
             print(f"[2k] Dùng license từ ENV {env_name}")
             return v
-
-    root = Path(__file__).resolve().parent
-    candidates = [
-        Path("/Users/may6/Downloads/chichbong/chichbongtaoanh/chichbong_api_client.py"),
-        root.parent.parent / "chichbong" / "chichbongtaoanh" / "chichbong_api_client.py",
-    ]
-    for p in candidates:
-        try:
-            if not p.exists():
-                continue
-            text = p.read_text(encoding="utf-8", errors="ignore")
-            m = re.search(
-                r'^\s*LICENSE_KEY\s*=\s*["\']([^"\']+)["\']', text, flags=re.MULTILINE
-            )
-            if m:
-                print(f"[2k] Auto nạp license từ: {p}")
-                return m.group(1).strip()
-        except Exception:
-            continue
-    return ""
+    # Tự dò từ file client ChichBong (macOS / Windows / Linux).
+    return resolve_license_from_client()
 
 
 def _collect_prompts(args: argparse.Namespace) -> list[str]:
