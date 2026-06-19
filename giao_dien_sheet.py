@@ -90,7 +90,7 @@ class App:
         self.drive_folder = tk.StringVar(value=cfg.get("drive_folder", "root"))
         self.var_ratio = tk.StringVar(value=_key_for_value(RATIO_MAP, cfg.get("ratio", "square")))
         self.var_quality = tk.StringVar(value=_key_for_value(QUALITY_MAP, cfg.get("quality", "2k")))
-        self.var_in_flight = tk.IntVar(value=max(1, min(15, int(cfg.get("in_flight", 6) or 6))))
+        self.var_in_flight = tk.IntVar(value=max(1, min(50, int(cfg.get("in_flight", 6) or 6))))
 
         root.title("Chạy Sheet → Ảnh → Drive (ChichBong Imagen4)")
         root.geometry("700x700")
@@ -134,8 +134,8 @@ class App:
         ttk.Combobox(row, textvariable=self.var_quality, values=list(QUALITY_MAP.keys()),
                      state="readonly", width=12).pack(side="left", padx=(4, 14))
         ttk.Label(row, text="Gửi cùng lúc:").pack(side="left")
-        ttk.Spinbox(row, from_=1, to=15, textvariable=self.var_in_flight, width=4).pack(side="left", padx=4)
-        ttk.Label(row, text="(1–15, cao = nhanh hơn)", foreground="#888").pack(side="left")
+        ttk.Spinbox(row, from_=1, to=50, textvariable=self.var_in_flight, width=4).pack(side="left", padx=4)
+        ttk.Label(row, text="(1–50, cao = nhanh hơn)", foreground="#888").pack(side="left")
         row2 = ttk.Frame(f4)
         row2.pack(fill="x", padx=6, pady=(0, 6))
         ttk.Label(row2, text="Folder Drive (link hoặc 'root' = My Drive):").pack(side="left")
@@ -189,7 +189,7 @@ class App:
                 "drive_folder": self.drive_folder.get().strip() or "root",
                 "ratio": RATIO_MAP.get(self.var_ratio.get(), "square"),
                 "quality": QUALITY_MAP.get(self.var_quality.get(), "2k"),
-                "in_flight": max(1, min(15, int(self.var_in_flight.get() or 6))),
+                "in_flight": max(1, min(50, int(self.var_in_flight.get() or 6))),
             }, ensure_ascii=False, indent=2), encoding="utf-8")
         except Exception:
             pass
@@ -293,7 +293,7 @@ class App:
         drive = self.drive_folder.get().strip() or "root"
         ratio = RATIO_MAP.get(self.var_ratio.get(), "square")
         quality = QUALITY_MAP.get(self.var_quality.get(), "2k")
-        in_flight = max(1, min(15, int(self.var_in_flight.get() or 6)))
+        in_flight = max(1, min(50, int(self.var_in_flight.get() or 6)))
 
         self.running = True
         self.stop_flag = False

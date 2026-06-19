@@ -625,7 +625,7 @@ async def generate_images_with_chichbong(
         _ = api.get_tokens()
 
     ws_client = _ChichBongWSClient(license_key=license_key, output_dir=output_dir)
-    cap = max(1, min(15, int(max_in_flight or 1)))
+    cap = max(1, min(50, int(max_in_flight or 1)))
     scene_indices = list(range(1, len(prompts) + 1))
     all_saved: dict[int, Path] = {}
 

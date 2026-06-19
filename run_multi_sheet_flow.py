@@ -162,7 +162,7 @@ def main() -> None:
             imagen4_license_key=str(args.imagen4_license_key),
             imagen4_aspect_ratio=str(args.imagen4_aspect_ratio),
             imagen4_quality=str(args.imagen4_quality),
-            imagen4_max_in_flight=max(1, min(15, int(args.imagen4_max_in_flight))),
+            imagen4_max_in_flight=max(1, min(50, int(args.imagen4_max_in_flight))),
             imagen4_use_legacy_model=bool(args.imagen4_legacy),
             imagen4_seed=int(args.imagen4_seed),
             imagen4_image_model_name=str(args.imagen4_image_model_name),
