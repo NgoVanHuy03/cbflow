@@ -1,30 +1,44 @@
 ==========================================================
-  HƯỚNG DẪN CHẨN ĐOÁN CHICHBONG TRÊN MÁY WINDOWS
+  TẠO ẢNH 2K — ChichBong Imagen4 (gói chạy trên Windows)
 ==========================================================
 
-MỤC ĐÍCH:
-  Xem máy Windows lưu LICENSE KEY + HARDWARE ID của ChichBong
-  (Imagen4) ở đâu trong Registry. Chỉ ĐỌC, KHÔNG sửa gì.
+Gói này TỰ ĐỦ — chỉ cần copy cả thư mục này sang máy Windows.
 
 ----------------------------------------------------------
-TRƯỚC KHI CHẠY:
-  - Đã cài và ĐÃ KÍCH HOẠT app ChichBong trên máy này.
+ĐIỀU KIỆN:
+  1. Đã cài Python (python.org) — TICK "Add Python to PATH".
+  2. Đã cài + ĐÃ KÍCH HOẠT app ChichBong trên máy này
+     (để máy có license trong Registry → tool tự đọc).
 ----------------------------------------------------------
 
-CÁCH 1 — KHÔNG cần Python (khuyên dùng):
-  1. Double-click file:  kiem_tra_win_chichbong.bat
-  2. Notepad sẽ tự mở, đồng thời tạo file:  ket_qua_chichbong.txt
-  3. Gửi lại file  ket_qua_chichbong.txt
+CÁCH CHẠY (chọn 1):
 
-CÁCH 2 — Nếu máy đã có Python:
-  1. Mở Command Prompt tại thư mục này
-  2. Chạy:   python kiem_tra_win_chichbong.py
-  3. Copy toàn bộ kết quả in ra, gửi lại
+  ▶ CÓ GIAO DIỆN (khuyên dùng):
+      Double-click:  MO_GIAO_DIEN_2K.bat
+      → Mở cửa sổ: gõ mô tả ảnh, bấm "TẠO ẢNH 2K".
+
+  ▶ DÒNG LỆNH (đơn giản):
+      Double-click:  tao_anh_2k.bat
+      → Gõ mô tả, ảnh lưu vào thư mục  anh_2k
+
+Lần đầu chạy hơi lâu (tự cài thư viện). Từ lần 2 nhanh.
+Ảnh tạo ra lưu trong thư mục  anh_2k  (cùng chỗ).
 
 ----------------------------------------------------------
-GỬI LẠI:
-  - File  ket_qua_chichbong.txt  (Cách 1)
-  - Hoặc toàn bộ chữ in ra màn hình (Cách 2)
+NẾU BÁO "Không tìm thấy license":
+  → Chưa cài/kích hoạt app ChichBong trên máy này.
+  → Mở app ChichBong, đăng nhập/kích hoạt xong rồi chạy lại.
+
+CHẨN ĐOÁN (nếu cần):
+  Double-click  kiem_tra_win_chichbong.bat
+  rồi gửi lại file  ket_qua_chichbong.txt
 ----------------------------------------------------------
 
-An toàn: script chỉ đọc thông tin, không thay đổi máy.
+Cấu trúc gói (không xoá file nào):
+  MO_GIAO_DIEN_2K.bat        ← mở giao diện
+  tao_anh_2k.bat             ← chạy dòng lệnh
+  tao_anh_2k_gui.py          ← code giao diện
+  tao_anh_2k.py              ← code dòng lệnh
+  requirements.txt           ← danh sách thư viện
+  services\                  ← engine ChichBong
+  kiem_tra_win_chichbong.bat ← chẩn đoán (khi cần)
