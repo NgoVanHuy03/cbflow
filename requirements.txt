@@ -1,10 +1,12 @@
-# Thư viện tối thiểu để tạo ảnh 2K (tao_anh_2k.py / run_imagen4.py)
+# Thư viện cho tạo ảnh 2K (tao_anh_2k / GUI 2K)
 websockets>=12.0
 requests>=2.31
 certifi>=2024.2.2
 
-# (Tùy chọn) cho pipeline đầy đủ Sheet/Drive + Google Flow:
-# google-api-python-client>=2.0
-# google-auth>=2.0
-# google-auth-oauthlib>=1.0
+# Thư viện cho chạy pipeline Google Sheet (GUI Sheet)
+google-api-python-client>=2.0
+google-auth>=2.0
+google-auth-oauthlib>=1.0
+
+# (Tùy chọn) chỉ cần khi dùng engine Google Flow (Playwright):
 # playwright>=1.40

@@ -1,44 +1,38 @@
 ==========================================================
-  TẠO ẢNH 2K — ChichBong Imagen4 (gói chạy trên Windows)
+  CÔNG CỤ CHICHBONG IMAGEN4 — chạy trên Windows
 ==========================================================
 
-Gói này TỰ ĐỦ — chỉ cần copy cả thư mục này sang máy Windows.
+Gói này TỰ ĐỦ — copy cả thư mục sang Windows là chạy được.
 
 ----------------------------------------------------------
-ĐIỀU KIỆN:
-  1. Đã cài Python (python.org) — TICK "Add Python to PATH".
+ĐIỀU KIỆN CHUNG:
+  1. Cài Python (python.org) — TICK "Add Python to PATH".
   2. Đã cài + ĐÃ KÍCH HOẠT app ChichBong trên máy này
-     (để máy có license trong Registry → tool tự đọc).
+     (để tool tự đọc license từ máy).
 ----------------------------------------------------------
 
-CÁCH CHẠY (chọn 1):
+CÓ 2 CÔNG CỤ (double-click file .bat tương ứng):
 
-  ▶ CÓ GIAO DIỆN (khuyên dùng):
-      Double-click:  MO_GIAO_DIEN_2K.bat
-      → Mở cửa sổ: gõ mô tả ảnh, bấm "TẠO ẢNH 2K".
+▶ 1) TẠO ẢNH LẺ 2K / 1K:
+     MO_GIAO_DIEN_2K.bat
+     → Gõ mô tả, chọn 1K/2K + tỉ lệ, bấm tạo. Ảnh vào thư mục anh_2k.
 
-  ▶ DÒNG LỆNH (đơn giản):
-      Double-click:  tao_anh_2k.bat
-      → Gõ mô tả, ảnh lưu vào thư mục  anh_2k
+▶ 2) CHẠY NHIỀU SHEET (Sheet → Ảnh → Drive → ghi link):
+     MO_GIAO_DIEN_SHEET.bat
+     Các bước trên giao diện:
+       1. Chọn file credentials (.json)  — chìa khóa Google.
+       2. Bấm "Đăng nhập Google"          — mở trình duyệt xác thực.
+       3. Chọn file danh sách sheet (.txt) — mỗi dòng 1 link sheet.
+       4. Folder Drive lưu ảnh (mặc định root = My Drive).
+       5. Bấm "BẮT ĐẦU CHẠY".
 
 Lần đầu chạy hơi lâu (tự cài thư viện). Từ lần 2 nhanh.
-Ảnh tạo ra lưu trong thư mục  anh_2k  (cùng chỗ).
 
 ----------------------------------------------------------
-NẾU BÁO "Không tìm thấy license":
-  → Chưa cài/kích hoạt app ChichBong trên máy này.
-  → Mở app ChichBong, đăng nhập/kích hoạt xong rồi chạy lại.
+LƯU Ý:
+ - File .json credentials và file .txt link sheet: bạn tự chuẩn bị
+   rồi chọn trên giao diện (có thể để cạnh thư mục này cho tiện).
+ - Nếu báo "Không thấy license": chưa kích hoạt app ChichBong.
 
-CHẨN ĐOÁN (nếu cần):
-  Double-click  kiem_tra_win_chichbong.bat
-  rồi gửi lại file  ket_qua_chichbong.txt
+CHẨN ĐOÁN (khi cần): kiem_tra_win_chichbong.bat
 ----------------------------------------------------------
-
-Cấu trúc gói (không xoá file nào):
-  MO_GIAO_DIEN_2K.bat        ← mở giao diện
-  tao_anh_2k.bat             ← chạy dòng lệnh
-  tao_anh_2k_gui.py          ← code giao diện
-  tao_anh_2k.py              ← code dòng lệnh
-  requirements.txt           ← danh sách thư viện
-  services\                  ← engine ChichBong
-  kiem_tra_win_chichbong.bat ← chẩn đoán (khi cần)
