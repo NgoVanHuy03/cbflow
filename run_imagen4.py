@@ -86,9 +86,9 @@ def _parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--quality", "-q",
-        default="1k",
+        default="2k",
         choices=["1k", "2k", "4k"],
-        help="Chất lượng upscale (mặc định: 1k)",
+        help="Chất lượng upscale (mặc định: 2k)",
     )
     parser.add_argument(
         "--in-flight",

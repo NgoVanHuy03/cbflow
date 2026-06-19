@@ -222,7 +222,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--drive-parent-hoa", default="root")
     p.add_argument("--imagen4-license-key", default="")
     p.add_argument("--imagen4-aspect-ratio", default="square", choices=["square", "landscape", "portrait"])
-    p.add_argument("--imagen4-quality", default="1k", choices=["1k", "2k", "4k"])
+    p.add_argument("--imagen4-quality", default="2k", choices=["1k", "2k", "4k"])
     p.add_argument("--imagen4-max-in-flight", type=int, default=15)
     p.add_argument("--imagen4-legacy", action="store_true")
     p.add_argument("--imagen4-seed", type=int, default=0)

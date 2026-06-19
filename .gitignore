@@ -4,6 +4,8 @@ __pycache__/
 
 # Local runtime outputs
 output_images/
+imagen4_output/
+anh_2k/
 debug_sessions/
 progress_dreamina.json
 *.har

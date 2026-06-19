@@ -74,7 +74,7 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument("--imagen4-license-key", default="", help="License key ChichBong Imagen4 (để trống = tự dò từ ENV/chichbongtaoanh)")
     p.add_argument("--imagen4-aspect-ratio", default="square", choices=["square", "landscape", "portrait"], help="Tỉ lệ ảnh cho Imagen4")
-    p.add_argument("--imagen4-quality", default="1k", choices=["1k", "2k", "4k"], help="Chất lượng ảnh Imagen4")
+    p.add_argument("--imagen4-quality", default="2k", choices=["1k", "2k", "4k"], help="Chất lượng ảnh Imagen4 (mặc định: 2k)")
     p.add_argument("--imagen4-max-in-flight", type=int, default=15, help="Số prompt chạy đồng thời cho Imagen4 (mặc định: 15)")
     p.add_argument("--imagen4-legacy", action="store_true", help="Dùng model legacy IMAGEN_3_5 cho Imagen4")
     p.add_argument("--imagen4-seed", type=int, default=0, help="Seed cố định cho Imagen4 (0 = random)")

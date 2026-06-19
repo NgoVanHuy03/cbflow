@@ -97,7 +97,7 @@ class SheetFlowConfig:
     # aspect_ratio cho imagen4: square | landscape | portrait
     imagen4_aspect_ratio: str = "square"
     # quality output theo API ChichBong: 1k | 2k | 4k
-    imagen4_quality: str = "1k"
+    imagen4_quality: str = "2k"
     # số prompt chạy đồng thời cho Imagen4 (mặc định giống Flow: 6)
     imagen4_max_in_flight: int = 6
     # bật model legacy IMAGEN_3_5
@@ -956,7 +956,7 @@ async def _generate_images_dispatch(
             max_in_flight=int(config.imagen4_max_in_flight or 6),
             use_legacy_model=bool(config.imagen4_use_legacy_model),
             seed=(int(config.imagen4_seed) if int(config.imagen4_seed or 0) > 0 else None),
-            upscale_mode=str(config.imagen4_quality or "1k"),
+            upscale_mode=str(config.imagen4_quality or "2k"),
             image_model_name=(str(config.imagen4_image_model_name or "").strip() or None),
         )
 
@@ -1029,7 +1029,7 @@ async def _generate_character_images(
         aspect_ratio=config.imagen4_aspect_ratio,
         use_legacy_model=bool(config.imagen4_use_legacy_model),
         seed=(int(config.imagen4_seed) if int(config.imagen4_seed or 0) > 0 else None),
-        upscale_mode=str(config.imagen4_quality or "1k"),
+        upscale_mode=str(config.imagen4_quality or "2k"),
         image_model_name=(str(config.imagen4_image_model_name or "").strip() or None),
     )
     _log(f"[char] Hoàn tất: {len(saved)}/{len(entries)} ảnh nhân vật.")
